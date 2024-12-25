@@ -1,0 +1,23 @@
+SubjectID,SubjectName,Department
+1,Microeconomics,Economics
+2,Genetics,Biology
+3,Algebra,Mathematics
+4,Fluid Dynamics,Engineering
+6,Inorganic Chemistry,Chemistry
+8,Thermodynamics,Engineering
+12,Organic Chemistry,Chemistry
+13,Data Structures,Computer Science
+14,Astrophysics,Physics
+18,Macroeconomics,Economics
+20,Machine Learning,Computer Science
+22,Ecology,Biology
+25,Linear Algebra,Mathematics
+33,Quantum Mechanics,Physics
+56,World History,History
+78,Medieval History,History
+79,Software Engineering,Computer Science
+80,Network Security,Computer Science
+81,Database Systems,Computer Science
+82,Artificial Intelligence,Computer Science
+83,Cloud Computing,Computer Science
+84,Web Development,Computer Science

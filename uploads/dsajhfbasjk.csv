@@ -1,0 +1,11 @@
+StudentID,FirstName,LastName,AcademicYear,DateOfBirth,Email,ImageURL,UniversityID,SubjectsTaken
+17915,Rustam,Karimov,2024,1993-02-14,rustam.karimov@live.com,https://randomuser.me/api/portraits/men/10.jpg,1,"79, 84, 80, 13"
+18024,Sarah,Johnson,2024,1995-07-23,sarah.j@gmail.com,https://randomuser.me/api/portraits/women/1.jpg,2,"1, 6, 8, 12"
+18156,Michael,Chen,2024,1994-11-05,mchen@outlook.com,https://thispersondoesnotexist.com/,1,"3, 4, 14, 25"
+18267,Emma,Williams,2024,1996-03-30,emma.w@yahoo.com,https://randomuser.me/api/portraits/women/3.jpg,1,"2, 18, 22, 33"
+18392,David,Smith,2024,1995-09-18,dsmith@hotmail.com,https://randomuser.me/api/portraits/men/4.jpg,1,"4, 13, 20, 84"
+18445,Lisa,Brown,2024,1994-12-07,lbrown@gmail.com,https://randomuser.me/api/portraits/women/5.jpg,1,"3, 12, 13, 78"
+18567,James,Garcia,2024,1996-05-15,jgarcia@live.com,https://randomuser.me/api/portraits/men/6.jpg,1,"1, 18, 25, 79"
+18634,Anna,Kowalski,2024,1995-08-22,akowalski@outlook.com,https://randomuser.me/api/portraits/women/7.jpg,1,"6, 12, 13, 81"
+18789,Thomas,Lee,2024,1993-04-11,tlee@yahoo.com,https://randomuser.me/api/portraits/men/8.jpg,1,"2, 8, 22, 33"
+18845,Maria,Rodriguez,2024,1994-06-25,mrodriguez@gmail.com,https://randomuser.me/api/portraits/women/9.jpg,1,"4, 13, 14, 20"

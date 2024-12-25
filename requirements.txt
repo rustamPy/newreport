@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+pandas
+xhtml2pdf
+jinja2
+python-multipart
+reportlab
+matplotlib
+pillow

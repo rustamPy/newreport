@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Reporting System</title>
+    <link rel="icon" href="/static/imgs/favicon.svg" type="image/x-icon">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+
+        let students;
+        
+        document.addEventListener('DOMContentLoaded', () => {
+
+            fetch('/api/v1/table/Students').then(resp => resp.json()).then(data => {
+                
+                const studentsSelect = document.getElementById('studentsSelect');
+                const universityStudents = document.createElement('optgroup');
+                universityStudents.label = 'University Students';
+    
+                data.forEach(student => {
+                    const studentOption = document.createElement('option');
+                    studentOption.value = student.StudentID;
+                    studentOption.innerText = `${student.FirstName} ${student.LastName}`
+                    universityStudents.appendChild(studentOption);
+                })
+    
+                studentsSelect.appendChild(universityStudents);
+            });
+        })
+
+        function generateSelectedStudentReport() {
+            const studentsSelect = document.getElementById('studentsSelect');
+            const selectedStudentId = studentsSelect.value;
+            if (selectedStudentId) {
+                generateReport('student-individual', selectedStudentId);
+            } else {
+                alert('Please select a student');
+            }
+        }
+
+        const onSelectStudent = () => {
+            const studentInfo = document.getElementById('studentsSelect');
+            const downloadButton = document.getElementById('download-link');
+            downloadButton.classList.add('hidden');
+            console.log(`Selected student ID: ${studentInfo.value}; Name: ${students.filter(student => student.StudentID === parseInt(studentInfo.value))[0].FirstName}`)
+        }
+    </script>
+</head>
+<body class="bg-gray-50 h-full">
+    <div class="flex items-center justify-center p-4">
+        <div class="relative">
+            <div class="container mx-auto max-w-md bg-white shadow-md rounded-lg p-6 space-y-4 relative z-10">
+                <div class="flex flex-col items-center justify-center">
+                    <img src="/static/imgs/favicon.svg" alt="Academic Reporting System" class="w-16 h-16" />
+                    <h1 class="text-2xl font-bold text-center text-blue-800 mb-4">
+                        Academic Reporting and Tables
+                    </h1>
+                </div>
+                
+                
+                <div class="bg-gray-100 p-4 rounded-lg border border-gray-200">
+                    <h2 class="text-lg font-semibold text-gray-700 mb-3">Upload Custom CSV/DB</h2>
+                    <div class="flex space-x-2">
+                        <input 
+                            type="file" 
+                            id="csvFileInput" 
+                            accept=".csv" 
+                            class="flex-grow text-sm text-gray-500 
+                                file:mr-2 file:py-1 file:px-3
+                                file:rounded-full file:border-0
+                                file:text-sm file:font-semibold
+                                file:bg-blue-50 file:text-blue-700
+                                hover:file:bg-blue-100"
+                        />
+                        <button 
+                            onclick="uploadCSV()" 
+                            class="px-3 py-1 bg-blue-500 text-white rounded-full 
+                                hover:bg-blue-600 text-sm"
+                        >
+                            Upload
+                        </button>
+                    </div>
+
+                    <div>
+                        <p id="uploadStatus" class="text-xs text-gray-600 hidden"></p>
+                    </div>
+                </div>
+
+                <div class="bg-gray-100 p-4 rounded-lg border border-gray-200">
+                    <h2 class="text-lg font-semibold text-gray-700 mb-3">Generate Reports</h2>
+                    <div class="space-y-2">
+                        <select
+                            id="studentsSelect"
+                            class="w-full px-3 py-2 bg-white border border-gray-300 rounded-md 
+                                text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            onchange="onSelectStudent()"
+                        >
+                            <option value="">Select a Student</option>
+                        </select>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button 
+                                onclick="generateSelectedStudentReport()"
+                                class="px-3 py-2 bg-green-500 text-white rounded-md 
+                                    text-sm hover:bg-green-600"
+                            >
+                                Student Report
+                            </button>
+                            <button 
+                                onclick="generateReport('academic-performance')"
+                                class="px-3 py-2 bg-indigo-500 text-white rounded-md 
+                                    text-sm hover:bg-indigo-600"
+                            >
+                                Performance
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div 
+                    class="text-xs text-gray-600"
+                >   
+                    <a id="download-link" class="w-16 h-4 bg-red-500 rounded-md text-white hidden p-2 cursor-pointer">
+                        Download
+                    </a>
+                </div>
+            </div>
+            <!-- Student sidebar -->
+            <div class="absolute top-[20px] -right-[150px]">
+                <button 
+                    class="flex items-center bg-blue-500 text-white py-2 px-4 rounded-r-lg shadow-lg
+                        hover:translate-x-1 transition-transform duration-200 ease-in-out w-48 justify-end"
+                    onclick="getTableView('Students')">
+                    <span class="transform right">Students Table</span>
+                </button>
+            </div>
+            <!-- Subjects sidebar -->
+            <div class="absolute top-[80px] -right-[150px]">
+                <button 
+                    class="flex items-center bg-blue-500 text-white py-2 px-4 rounded-r-lg shadow-lg
+                        hover:translate-x-1 transition-transform duration-200 ease-in-out w-48 justify-end"
+                    onclick="getTableView('Subjects')">
+                    <span class="transform right">Subjects Table</span>
+                </button>
+            </div>
+
+            <!-- Exams sidebar -->
+            <div class="absolute top-[140px] -right-[150px]">
+                <button 
+                    class="flex items-center bg-blue-500 text-white py-2 px-4 rounded-r-lg shadow-lg
+                        hover:translate-x-1 transition-transform duration-200 ease-in-out w-48 justify-end"
+                    onclick="getTableView('Exams')">
+                    <span class="transform right">Exams Table</span>
+                </button>
+            </div>
+
+            <!-- Grades sidebar -->
+            <div class="absolute top-[200px] -right-[150px]">
+                <button 
+                    class="flex items-center bg-red-500 text-white py-2 px-4 rounded-r-lg shadow-lg
+                        hover:translate-x-1 transition-transform duration-200 ease-in-out w-48 justify-end"
+                    onclick="getTableView('Grades')">
+                    <span class="transform right">Grades Table</span>
+                </button>
+            </div>
+
+            <!-- Univerisities sidebar -->
+            <div class="absolute top-[20px] -left-[150px]">
+                <button 
+                    class="flex items-center bg-blue-500 text-white py-2 px-4 rounded-l-lg shadow-lg
+                        hover:-translate-x-1 transition-transform duration-200 ease-in-out w-48 justify-start"
+                    onclick="getTableView('universities')">
+                    <span class="transform right">Universities Table</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="m-4 bg-white rounded-lg border border-gray-200 shadow-sm hidden" id="tableContainer">
+        <div class="p-4 overflow-auto max-h-[500px]">
+            <div id="tableContent" ></div>
+        </div>
+    </div>
+
+    <footer class="sticky bottom-0 w-full">
+        <div class="bg-gray-300 text-gray-900 text-center text-sm py-2">
+            &copy; 2024 Academic Reporting System - for Thesis Project use only - Rustam Karimov
+        </div>
+    </footer>
+    <script src="/static/js/report-generator.js"></script>
+</body>
+
+</html>

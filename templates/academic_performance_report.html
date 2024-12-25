@@ -1,0 +1,191 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>{{ UniversityName }} - Academic Performance Report</title>
+    <style type="text/css">
+        @page {
+            size: a4 portrait;
+            margin: 1cm;
+            @frame header {
+                -pdf-frame-content: header_content;
+                top: 1cm;
+                margin-left: 1cm;
+                margin-right: 1cm;
+                height: 2cm;
+            }
+            @frame content {
+                -pdf-frame-content: content;
+                top: 3cm;
+                margin-left: 1cm;
+                margin-right: 1cm;
+                height: 19cm;
+            }
+            @frame footer {
+                -pdf-frame-content: footer_content;
+                bottom: 1cm;
+                margin-left: 1cm;
+                margin-right: 1cm;
+                height: 1cm;
+            }
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 10pt;
+            line-height: 1.4;
+        }
+        table {
+            -pdf-keep-in-frame-mode: overflow;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+        }
+        
+        .performance-summary {
+            page-break-inside: avoid; /* Avoid splitting this block across pages */
+            display: table;
+            width: 100%;
+            margin-bottom: 15pt;
+            border-collapse: separate;
+            border-spacing: 10pt;
+        }
+        
+        .summary-card {
+            display: table-cell;
+            border: 1px solid #ddd;
+            padding: 10pt;
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+        .performance-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15pt;
+            font-size: 9pt;
+        }
+        
+        .performance-table th, 
+        .performance-table td {
+            border: 1px solid #ddd;
+            padding: 6pt;
+            text-align: left;
+        }
+        
+        .performance-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        
+        .performance-chart {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 15pt;
+        }
+        
+        .footer {
+            text-align: center;
+            font-size: 8pt;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div id="header_content">
+        <div class="header">
+            <h1>{{ UniversityName }} - Academic Performance Report</h1>
+            <h2>{{ Address }}</h2>
+        </div>
+        <p><strong>Report Generated:</strong> {{ current_date }}</p>
+    </div>
+
+    <div>
+        <table class="performance-table">
+            <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>Department</th>
+                    <th>Avg Marks</th>
+                    <th>Min Marks</th>
+                    <th>Max Marks</th>
+                    <th>Total Exams</th>
+                    <th>Pass %</th>
+                    <th>Grade A %</th>
+                    <th>Grade B %</th>
+                    <th>Marks Std Dev</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for _, row in performance_data.iterrows() %}
+                <tr>
+                    <td>{{ row['SubjectName'] }}</td>
+                    <td>{{ row['Department'] }}</td>
+                    <td>{{ "%.2f"|format(row['AverageMarks']) }}</td>
+                    <td>{{ "%.2f"|format(row['MinMarks']) }}</td>
+                    <td>{{ "%.2f"|format(row['MaxMarks']) }}</td>
+                    <td>{{ row['TotalExams'] }}</td>
+                    <td>{{ "%.2f"|format(row['PassPercentage']) }}%</td>
+                    <td>{{ "%.2f"|format(row['GradeAPercentage']) }}%</td>
+                    <td>{{ "%.2f"|format(row['GradeBPercentage']) }}%</td>
+                    <td>{{ "%.2f"|format(row['MarksStandardDeviation']) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    
+        <div class="performance-summary">
+            <div class="summary-card">
+                <h3>Top Performing Subject</h3>
+                <p>{{ performance_data.loc[performance_data['AverageMarks'].idxmax(), 'SubjectName'] }}</p>
+                <p>Avg Marks: {{ "%.2f"|format(performance_data['AverageMarks'].max()) }}</p>
+            </div>
+            <div class="summary-card">
+                <h3>Overall Pass Percentage</h3>
+                <p>{{ "%.2f"|format(performance_data['PassPercentage'].mean()) }}%</p>
+            </div>
+            <div class="summary-card">
+                <h3>Subjects Covered</h3>
+                <p>{{ performance_data['SubjectName'].nunique() }}</p>
+            </div>
+        </div>
+    
+        <div>
+            <h2>Performance Distribution Charts</h2>
+            <div class="chart-container">
+                {% if avg_marks_bar_chart %}
+                <div class="chart-item">
+                    <h3>Average Marks by Subject</h3>
+                    <img src="data:image/png;base64,{{ avg_marks_bar_chart }}" alt="Average Marks Bar Chart" />
+                </div>
+                {% endif %}
+    
+                {% if grade_distribution_pie %}
+                <div class="chart-item">
+                    <h3>Grade Distribution</h3>
+                    <img src="data:image/png;base64,{{ grade_distribution_pie }}" alt="Grade Distribution Pie Chart" />
+                </div>
+                {% endif %}
+    
+                {% if marks_distribution_boxplot %}
+                <div class="chart-item">
+                    <h3>Marks Distribution</h3>
+                    <img src="data:image/png;base64,{{ marks_distribution_boxplot }}" alt="Marks Distribution Box Plot" />
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    
+    
+    <div id="footer_content">
+        <div class="footer">
+            <p>Academic Performance Report - {{ UniversityName }} | Page <pdf:pagenumber> of <pdf:pagecount></p>
+        </div>
+    </div>
+</body>
+</html>
