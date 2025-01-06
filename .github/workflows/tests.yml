@@ -39,10 +39,6 @@ jobs:
         run: |
           PYTHONPATH=$(pwd) pytest tests
 
-      - name: Run pytest
-        run: |
-          pytest tests
-
       - name: Finish tests
         run: |
           echo "Tests are finished! 🏆"
