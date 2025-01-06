@@ -29,10 +29,11 @@ jobs:
         run: |
           echo "🏃🏻‍♂️‍➡️ Running pytest tests..."
       
-            
       - name: Check PWD
         run: pwd
 
+      - name: Check LS
+        run: ls -l
 
       - name: Run pytest
         run: |
