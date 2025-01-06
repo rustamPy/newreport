@@ -31,7 +31,10 @@ jobs:
       
       - name: Run pytest
         run: |
-          pytest --maxfail=5 --disable-warnings
+          pytest tests
+      
+      - name: Check PWD
+        run: pwd
       
       - name: Finish tests
         run: |
