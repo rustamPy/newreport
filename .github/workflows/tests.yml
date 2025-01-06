@@ -1,5 +1,8 @@
-name: Python Tests
+name: Start tests
+  run: echo "🏃🏻‍♂️‍➡️ Running pytest tests..."
 
+
+name: Pytests for ARS
 on:
   push:
     branches:
@@ -29,3 +32,7 @@ jobs:
       - name: Run pytest
         run: |
           pytest --maxfail=5 --disable-warnings
+
+
+name: Finish tests
+  run: echo "Tests are finished! 🏆"
