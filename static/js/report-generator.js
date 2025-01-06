@@ -1,18 +1,7 @@
-function showStatus(message, isError = false) {
-    const statusMessage = document.getElementById('status-message');
-    statusMessage.textContent = message;
-    statusMessage.className = isError ? 'status-message error' : 'status-message success';
-}
-
 function uploadCSV() {
     const fileInput = document.getElementById('csvFileInput');
     const uploadStatus = document.getElementById('uploadStatus');
     const file = fileInput.files[0];
-
-    if (!file) {
-        showStatus('Please select a CSV file', true);
-        return;
-    }
 
     const formData = new FormData();
     formData.append('file', file);
@@ -21,23 +10,29 @@ function uploadCSV() {
         method: 'POST',
         body: formData
     })
-    .then(response => response.json())
-    .then(data => {
-
-        uploadStatus.classList.remove('hidden');
-        uploadStatus.innerHTML = `${data.filename} was uploaded successfully!`;
-        if (!data.tablename) {
-            uploadStatus.innerHTML += `\n<br>No table was updated!`;
-        } else {
-            uploadStatus.innerHTML += `\n<br><mark>${data.tablename}</mark> Table was updated!`;
-        }
-
+        .then(response => {
+            if (!response.ok) {
+                console.log(response);
+                return response.text().then(text => {
+                    throw new Error(`HTTP ${response.status}: ${text || response.statusText}`);
+                });
+            }
+            return response.json()
+        })
+        .then(data => {
+            uploadStatus.classList.remove('hidden');
+            uploadStatus.innerHTML = `${data.filename} was uploaded successfully!`;
+            if (!data.tablename) {
+                uploadStatus.innerHTML += `<br>No table was updated!`;
+            } else {
+                uploadStatus.innerHTML += `<br><mark>${data.tablename}</mark> Table was updated!`;
+            }
     })
     .catch(error => {
-        showStatus('Error uploading file', true);
+        uploadStatus.classList.remove('hidden');
+        uploadStatus.innerHTML = `<span class="text-red-600">${error.message}</span>`;
         console.error('Error:', error);
     });
-
 
 }
 
@@ -66,8 +61,7 @@ function generateReport(reportType, id=0) {
         console.log('URL:', url);
         downloadReport(url);
     })
-    .catch(error => {
-        showStatus('Error generating report', true);
+        .catch(error => {
         console.error('Error:', error);
     });
 }
@@ -181,7 +175,6 @@ window.addEventListener('popstate', (event) => {
 window.addEventListener('load', () => {
     console.log(window.location)
     const hash = window.location.hash.slice(1);
-    console.log('Hash:', hash);
     if (hash) {
         const params = new URLSearchParams(hash);
         const tableName = params.get('table');

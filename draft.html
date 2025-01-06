@@ -1,193 +1,101 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <style>
-        @page {
-            size: A4;
-            margin: 2cm;
-            @frame header_frame {
-                -pdf-frame-content: header_content;
-                left: 2cm; width: 17cm; top: 0.5cm; height: 2.5cm;
-            }
-            @frame footer_frame {
-                -pdf-frame-content: footer_content;
-                left: 2cm; width: 17cm; bottom: 0.5cm; height: 1cm;
-            }
-            @frame content_frame {
-                left: 2cm; width: 17cm; top: 3.5cm; height: 23.2cm;
-            }
-        }
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            margin: 0;
-            padding: 0;
-        }
-        .report-container {
-            width: 100%;
-            max-width: 21cm;
-            margin: 0 auto;
-        }
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            margin-bottom: 15px;
-        }
-        .university-logo {
-            width: 20px;
-            height: auto;
-        }
-        .header-right {
-            text-align: right;
-        }
-        .header-date {
-            font-size: 12px;
-            color: #666;
-        }
-        .report-title {
-            text-align: center;
-            margin: 15px 0;
-        }
-        .report-title h1 {
-            font-size: 20px;
-            color: #1a4f7c;
-            margin: 0;
-        }
-        .report-title h2 {
-            font-size: 18px;
-            color: #444;
-            margin: 5px 0;
-        }
-        .report-title p {
-            font-size: 14px;
-            color: #666;
-            margin: 5px 0;
-        }
-        .student-info {
-            display: flex;
-            align-items: flex-start;
-            margin: 20px 0;
-            padding: 15px;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        .photo {
-            width: 40px;
-            height: 40px;
-            margin-right: 15px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        .photo img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .info {
-            flex: 1;
-        }
-        .info-row {
-            margin-bottom: 8px;
-        }
-        .label {
-            font-weight: bold;
-            width: 120px;
-            display: inline-block;
-            color: #555;
-        }
-        .performance-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-        .performance-table th,
-        .performance-table td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: left;
-        }
-        .performance-table th {
-            background-color: #1a4f7c;
-            color: white;
-            font-weight: normal;
-        }
-        .performance-table tr:nth-child(even) {
-            background-color: #f8f9fa;
-        }
-        .page-footer {
-            text-align: center;
-            font-size: 12px;
-            color: #666;
-            padding: 10px 0;
-            border-top: 1px solid #ddd;
-        }
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Reusable Searchable Dropdown</title>
+    </head>
+    <body class="flex flex-col items-center justify-center h-screen bg-gray-100 space-y-4">
+        <div>
+            <button id="selectFunction1" class="px-2 py-2 bg-blue-500 text-white text-xs rounded-md"
+                onclick="createDropdown(1)">Show
+                Dropdown
+                1</button>
+            <div id="dropdownContainer1" class="fixed"></div>
+        </div>
 
-    </style>
-</head>
-<body>
-    <div id="header_content">
-        <div class="page-header">
-            <img src="https://cdn.freebiesupply.com/logos/large/2x/harvard-university-logo-png-transparent.png" alt="University Logo" class="university-logo">
-            <div class="header-right">
-                <div class="header-date">Date: 2024-12-22</div>
+        <div>
+            <div id="selectFunction2">
+                <button class="px-2 py-2 bg-blue-500 text-white text-xs rounded-md" onclick="createDropdown(2)">Show
+                    Dropdown
+                    1</button>
             </div>
-        </div>
-    </div>
-
-    <div class="report-container">
-        <div class="report-title">
-            <h1>Harvard Institute of Technology</h1>
-            <h2>Student Progress Report</h2>
-            <p>Academic Year: </p>
-        </div>
-
-        <div class="student-info">
-            <div class="photo">
-                <img src="https://randomuser.me/api/portraits/women/1.jpg" alt="Student Photo">
+            <div id="dropdownContainer2" class="fixed"></div>
             </div>
-            <div class="info">
-                <div class="info-row">
-                    <span class="label">Student Name:</span>
-                    <span>Sarah Johnson</span>
-                </div>
-                <div class="info-row">
-                    <span class="label">Student ID:</span>
-                    <span>18024</span>
-                </div>
-                <div class="info-row">
-                    <span class="label">Date of Birth:</span>
-                    <span>1995-07-23</span>
-                </div>
+<script>
+    function createDropdown(id, selectedText = "Select an option") {
+        console.log(id)
+        const dropdownContainer = document.getElementById(`dropdownContainer${id}`);
+        const selectFunction = document.getElementById(`selectFunction${id}`);
+        const options = ["Option 1", "Option 2", "Option 3", "Option 4"];
+        const dropdown = document.createElement('div');
+        selectFunction.innerHTML = ''
+        dropdown.className = 'relative w-64';
+        dropdown.innerHTML = `
+                                                                    <button class="w-full bg-white border border-gray-300 rounded-md px-4 py-2 text-left shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                                                        ${selectedText}
+                                                                    </button>
+                                                                    <div class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg">
+                                                                        <div class="p-2">
+                                                                            <input type="text" placeholder="Search..." class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                                                        </div>
+                <ul class="max-h-40 overflow-y-auto">
+                    ${options.map(option => `<li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">${option}</li>`).join('')}
+                </ul>
             </div>
-        </div>
+        `;
 
-        <table class="performance-table">
-            <thead>
-                <tr>
-                    <th>Subject</th>
-                    <th>Marks Obtained</th>
-                    <th>Maximum Marks</th>
-                    <th>Grade</th>
-                    <th>Remarks</th>
-                </tr>
-            </thead>
-            <tbody>
-                
-            </tbody>
-        </table>
-    </div>
+                const button = dropdown.querySelector('button');
+                const dropdownMenu = dropdown.querySelector('div.absolute');
+                const searchInput = dropdown.querySelector('input');
+                const optionsList = dropdown.querySelector('ul');
 
-    <div id="footer_content">
-        <div class="page-footer">
-            Page <pdf:pagenumber> of <pdf:pagecount>
-        </div>
-    </div>
+                button.addEventListener('click', () => {
+                    dropdownMenu.classList.toggle('hidden');
+                    searchInput.value = '';
+                    filterOptions();
+                });
+
+                searchInput.addEventListener('input', filterOptions);
+
+                optionsList.querySelectorAll('li').forEach(option => {
+                    option.addEventListener('click', () => {
+                        button.textContent = option.textContent;
+                        dropdownMenu.classList.add('hidden');
+                    });
+                });
+
+                function filterOptions() {
+                    const filter = searchInput.value.toLowerCase();
+                    optionsList.querySelectorAll('li').forEach(option => {
+                        const text = option.textContent.toLowerCase();
+                        option.style.display = text.includes(filter) ? 'block' : 'none';
+                    });
+                }
+
+                document.addEventListener('click', (event) => {
+                    if (!dropdown.contains(event.target)) {
+                        dropdownMenu.classList.add('hidden');
+                    }
+                });
+
+                dropdownContainer.innerHTML = '';
+                dropdownContainer.appendChild(dropdown);
+                return dropdown;
+            }
+
+                                                                                                        function showDropdown(event, defaultOption) {
+                                                                                                            dropdownContainer.innerHTML = '';
+                                                                                                            const dropdown = createDropdown(defaultOption, ["Option 1", "Option 2", "Option 3", "Option 4"]);
+                                                                                                            dropdownContainer.appendChild(dropdown);
+                                                                                                    
+                                                                                                                                                                                                                requestAnimationFrame(() => {
+                                                                                                                                                                                                                    const rect = event.target.getBoundingClientRect();
+                                                                                                                                                                                                                    dropdownContainer.style.top = `${rect.bottom}px`;
+                                                                                                                                                                                                                    dropdownContainer.style.left = `${rect.left}px`;
+                                                                                                                                                                                                                });
+                                                                                                                                                                                                            }
+                                                                                                                                                                                                        </script>
 </body>
 </html>

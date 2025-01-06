@@ -106,7 +106,6 @@ class ReportGenerator:
         plt.tight_layout()
         return fig
 
-
     # Generate Reports - 2 reports
     def generate_student_profile_report(self, student_id):
         """
@@ -166,30 +165,9 @@ class ReportGenerator:
     
     def generate_academic_performance_report(self):
         """Generate comprehensive academic performance report"""
-        # Get performance distribution data
-        performance_dist = self.db_manager.get_academic_performance_distribution()
         
-        # Get university details for branding
-        university_details = self.db_manager.get_university_details(1).to_dict("records")[0]
-
-        # Generate visualizations
-        visualizations = self._generate_additional_visualizations(performance_dist)
-
-        # Render template
-        template = self.template_env.get_template('academic_performance_report.html')
-        html_out = template.render(
-            performance_data=performance_dist,
-            grade_distribution_pie=visualizations['grade_distribution_pie'],
-            marks_distribution_boxplot=visualizations['marks_distribution_boxplot'],
-            current_date=datetime.now().strftime("%Y-%m-%d"),
-            **university_details
-        )
 
         # Generate PDF
         pdf_path = 'reports/academic_performance_report.pdf'
-        os.makedirs('reports', exist_ok=True)
-        self._html_to_pdf(html_out, pdf_path)
         
         return pdf_path
-
-    

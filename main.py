@@ -16,7 +16,7 @@ templates = Jinja2Templates(directory='templates')
 
 # Create FastAPI application
 app = FastAPI(
-    title="Academic Reporting Engine",
+    title="Academic Reporting System",
     description="Comprehensive student performance reporting system",
     version="1.0.0",
     docs_url="/docs",

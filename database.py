@@ -81,20 +81,16 @@ class DatabaseManager:
         
         with sqlite3.connect(self.db_path) as conn:
             # Clear existing data before importing
-            
             table_to_clear = ID_TO_TABLE.get(df.columns[0], None)
+
             if table_to_clear:
                 conn.execute(f'DELETE FROM {table_to_clear}')
 
             existing_table_columns = self._get_table_data(table_to_clear, limit=1)[0].keys() if table_to_clear else []
             importing_table_columns = df.columns
 
-            assert set(existing_table_columns) == set(importing_table_columns), 'Columns do not match'
+            assert set(existing_table_columns) == set(importing_table_columns), 'Columns do not match. Please review the input CSV once again.'
 
-
-            # Import Universities (if data available)
-            
-            
             # Import Grades
             if 'GradeID' in df.columns:
                 grades_df = df[['FirstName', 'LastName', 'SubjectName', 'ExamName', 'MarksObtained']]

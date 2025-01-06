@@ -20,7 +20,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/.venv/bin/pytest",
             "args": [
-                "${workspaceFolder}/tests/test_database.py",
+                "${workspaceFolder}/tests",
             ],
             "console": "integratedTerminal",
             "justMyCode": false

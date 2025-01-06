@@ -30,6 +30,7 @@ async def upload_csv(file: UploadFile = File(...)):
             shutil.copyfileobj(file.file, buffer)
         
         df = pd.read_csv(file_path)
+
         db_manager.import_csv(df)
         
         return JSONResponse(
