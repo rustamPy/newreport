@@ -21,6 +21,7 @@
             "program": "${workspaceFolder}/.venv/bin/pytest",
             "args": [
                 "${workspaceFolder}/tests",
+                "--verbose"
             ],
             "console": "integratedTerminal",
             "justMyCode": false

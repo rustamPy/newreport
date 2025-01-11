@@ -363,7 +363,7 @@ class ReportGenerator:
             })
                 
         # Get university details
-        university_details = self.db_manager.get_university_details()
+        university_details = self.db_manager.get_universities_details()
         
         # Prepare template data
         template_data = {

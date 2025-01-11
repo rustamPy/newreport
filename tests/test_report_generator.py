@@ -1,15 +1,15 @@
 import pytest
-from unittest.mock import Mock, patch, mock_open
 import pandas as pd
 import matplotlib.pyplot as plt
 import base64
 from report_generator import ReportGenerator
+from unittest.mock import Mock, patch, mock_open
 
 @pytest.fixture
 def mock_db_manager():
     """Fixture to create a mock database manager"""
     mock_db = Mock()
-    
+
     # Mock student data
     mock_db.get_student_data_by_id.return_value = pd.Series({
         'FirstName': 'John',
@@ -19,13 +19,13 @@ def mock_db_manager():
         'ImageURL': 'http://example.com/photo.jpg',
         'AcademicYear': '2024'
     })
-    
+
     # Mock subjects data
     mock_db.get_subjects_per_student.return_value = pd.DataFrame([
         {'SubjectName': 'Math', 'Credits': 3},
         {'SubjectName': 'Physics', 'Credits': 4}
     ])
-    
+
     # Mock grades data
     mock_db.get_grades_per_student.return_value = pd.DataFrame({
         'SubjectName': ['Math', 'Physics'] * 2,
@@ -33,13 +33,65 @@ def mock_db_manager():
         'MaxMarks': [100, 100, 100, 100],
         'ExamDate': ['2024-01-01', '2024-01-02', '2024-02-01', '2024-02-02']
     })
-    
+
     # Mock university data
     mock_db.get_university_per_student.return_value = pd.Series({
         'UniversityName': 'Test University',
         'LogoURL': 'http://example.com/logo.png'
     })
-    
+
+    # Mock all grades data
+    mock_db.get_all_grades.return_value = pd.DataFrame(
+        {
+            "StudentID": [1, 2, 3, 1, 2, 3],
+            "SubjectName": [
+                "Math",
+                "Physics",
+                "Chemistry",
+                "Math",
+                "Physics",
+                "Chemistry",
+            ],
+            "StudentMarks": [85, 90, 88, 75, 80, 78],
+            "MaxMarks": [100, 100, 100, 100, 100, 100],
+            "ExamDate": [
+                "2024-01-01",
+                "2024-01-02",
+                "2024-01-03",
+                "2024-02-01",
+                "2024-02-02",
+                "2024-02-03",
+            ],
+            "Department": [
+                "Science",
+                "Science",
+                "Science",
+                "Science",
+                "Science",
+                "Science",
+            ],
+        }
+    )
+
+    # Mock all students data
+    mock_db.get_all_students.return_value = pd.DataFrame(
+        {
+            "StudentID": [1, 2, 3],
+            "FirstName": ["John", "Jane", "Jim"],
+            "LastName": ["Doe", "Smith", "Beam"],
+            "ImageURL": [
+                "http://example.com/photo1.jpg",
+                "http://example.com/photo2.jpg",
+                "http://example.com/photo3.jpg",
+            ],
+        }
+    )
+
+    # Mock university details
+    mock_db.get_universities_details.return_value = pd.Series(
+        {"UniversityName": "Test University", "LogoURL": "http://example.com/logo.png"}
+    )
+
     return mock_db
 
 @pytest.fixture
@@ -115,46 +167,55 @@ async def test_generate_student_profile_report(report_generator, mock_db_manager
         with patch('builtins.open', mock_open()):
             with patch('xhtml2pdf.pisa.CreatePDF') as mock_create_pdf:
                 mock_create_pdf.return_value.err = 0
-                
+
                 result = report_generator.generate_student_profile_report(1)
-                
+
                 # Verify all database calls were made
                 mock_db_manager.get_student_data_by_id.assert_called_once_with(1)
                 mock_db_manager.get_subjects_per_student.assert_called_once_with(1)
                 mock_db_manager.get_grades_per_student.assert_called_once_with(1)
                 mock_db_manager.get_university_per_student.assert_called_once_with(1)
-                
+
                 # Verify PDF was created
                 mock_makedirs.assert_called_once_with('reports', exist_ok=True)
                 assert result == 'reports/student_1_profile.pdf'
 
-'''
+
+def test_create_student_achievements_plots():
+    """Test _create_student_achievements_plots method"""
+    generator = ReportGenerator(Mock())
+
+    # Create test data
+    grades_df = pd.DataFrame(
+        {
+            "SubjectName": ["Math", "Physics"] * 2,
+            "StudentMarks": [85, 90, 88, 92],
+            "MaxMarks": [100, 100, 100, 100],
+            "ExamDate": ["2024-01-01", "2024-01-02", "2024-02-01", "2024-02-02"],
+        }
+    )
+
+    fig = generator._create_student_achievements_plots(grades_df)
+
+    assert isinstance(fig, plt.Figure)
+    assert len(fig.axes) == 4  # Should have 4 subplots
+
+
 @pytest.mark.asyncio
 async def test_generate_academic_performance_report(report_generator, mock_db_manager):
     """Test generate_academic_performance_report method"""
-    # Mock additional methods needed for this report
-    mock_db_manager.get_academic_performance_distribution.return_value = pd.DataFrame({
-        'Grade': ['A', 'B', 'C'],
-        'Count': [10, 20, 15]
-    })
-    
-    mock_db_manager.get_university_details.return_value = pd.DataFrame([{
-        'UniversityName': 'Test University',
-        'LogoURL': 'http://example.com/logo.png'
-    }])
-    
     with patch('os.makedirs') as mock_makedirs:
         with patch('builtins.open', mock_open()):
             with patch('xhtml2pdf.pisa.CreatePDF') as mock_create_pdf:
                 mock_create_pdf.return_value.err = 0
-                
+
                 result = report_generator.generate_academic_performance_report()
-                
-                # Verify database calls
-                mock_db_manager.get_academic_performance_distribution.assert_called_once()
-                mock_db_manager.get_university_details.assert_called_once_with(1)
-                
+
+                # Verify all database calls were made
+                mock_db_manager.get_all_grades.assert_called_once()
+                mock_db_manager.get_all_students.assert_called_once()
+                mock_db_manager.get_universities_details.assert_called_once()
+
                 # Verify PDF was created
                 mock_makedirs.assert_called_once_with('reports', exist_ok=True)
                 assert result == 'reports/academic_performance_report.pdf'
-'''

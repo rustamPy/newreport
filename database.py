@@ -40,7 +40,6 @@ class DatabaseManager:
             column_type = self.infer_data_type(column)
             create_statement += f"{column} {column_type}, "
 
-
         create_statement = create_statement.rstrip(', ') + ')'
 
         with sqlite3.connect(self.db_path) as conn:
@@ -78,7 +77,7 @@ class DatabaseManager:
 
     def import_csv(self, df: pd.DataFrame):
         """Import data from CSV file with enhanced structure"""
-        
+
         with sqlite3.connect(self.db_path) as conn:
             # Clear existing data before importing
             table_to_clear = ID_TO_TABLE.get(df.columns[0], None)
@@ -104,13 +103,13 @@ class DatabaseManager:
                     conn.execute('SELECT ExamID, SubjectName, ExamName FROM Exams').fetchdf(), 
                     on=['SubjectName', 'ExamName']
                 )
-                
+
                 grades_df.to_sql('Grades', conn, if_exists='append', index=False)
-            
+
             elif 'ID' in df.columns[0]:
                 importing_df = df[importing_table_columns].drop_duplicates()
                 importing_df.to_sql(table_to_clear, conn, if_exists='append', index=False)
-            
+
             conn.commit()
 
     # TESTED
@@ -132,7 +131,7 @@ class DatabaseManager:
         select * from Students s
         where s.StudentID = ?
         '''
-        
+
         with sqlite3.connect(self.db_path) as conn:
             return pd.read_sql(student_data_sql, conn, params=(student_id,)).iloc[0]
 
@@ -159,10 +158,10 @@ class DatabaseManager:
             where s.StudentID = ?
         )
         '''
-        
+
         with sqlite3.connect(self.db_path) as conn:
             return pd.read_sql(university_per_student_sql, conn, params=(student_id,)).iloc[0]
-    
+
     # TESTED
     def get_subjects_per_student(self, student_id) -> pd.DataFrame:
         """
@@ -186,7 +185,7 @@ class DatabaseManager:
         FROM Subjects
         WHERE SubjectID IN (SELECT subject_id FROM split_subjects);
         '''
-        
+
         with sqlite3.connect(self.db_path) as conn:
             return pd.read_sql(subjects_per_student_sql, conn, params=(student_id,))
 
@@ -205,10 +204,38 @@ class DatabaseManager:
         SELECT * FROM Universities 
         WHERE UniversityID = ?
         '''
-        
+
         with sqlite3.connect(self.db_path) as conn:
             return pd.read_sql(university_query, conn, params=(university_id,)).iloc[0]
-    
+
+    # TESTED
+    def get_universities_details(self) -> pd.Series:
+        """
+        Retrieve university details for report branding.
+
+        Returns:
+            pd.Series: Series containing:
+                - UniversityID
+                - UniversityName
+                - LogoURL
+                - Address
+                - ContactDetails
+        """
+        query = """
+        SELECT 
+            UniversityID,
+            UniversityName,
+            LogoURL,
+            Address,
+            ContactDetails
+        FROM Universities
+        LIMIT 1
+        """
+
+        with sqlite3.connect(self.db_path) as conn:
+            result = pd.read_sql(query, conn)
+            return result.iloc[0] if not result.empty else pd.Series()
+
     # TESTED
     def get_grades_per_student(self, student_id) -> pd.DataFrame:
         """
@@ -233,10 +260,75 @@ class DatabaseManager:
         JOIN Subjects sb ON sb.SubjectID = e.SubjectID
         WHERE g.StudentID = ?
         '''
-        
+
         with sqlite3.connect(self.db_path) as conn:
             return pd.read_sql(grades_per_student_sql, conn, params=(student_id,))
 
+    # TESTED
+    def get_all_grades(self) -> pd.DataFrame:
+        """
+        Retrieve all grades data with associated exam, subject, and department information.
+
+        Returns:
+            pd.DataFrame: DataFrame containing columns:
+                - StudentID
+                - SubjectName
+                - Department
+                - MarksObtained
+                - MaximumMarks
+                - ExamDate
+                - ExamName
+        """
+        query = """
+        SELECT 
+            g.StudentID,
+            s.SubjectName,
+            s.Department,
+            g.MarksObtained as StudentMarks,
+            e.MaximumMarks as MaxMarks,
+            e.ExamDate,
+            e.ExamName
+        FROM Grades g
+        JOIN Exams e ON g.ExamID = e.ExamID
+        JOIN Subjects s ON e.SubjectID = s.SubjectID
+        ORDER BY e.ExamDate ASC
+        """
+
+        with sqlite3.connect(self.db_path) as conn:
+            return pd.read_sql(query, conn)
+
+    # TESTED
+    def get_all_students(self) -> pd.DataFrame:
+        """
+        Retrieve all student records with basic information.
+
+        Returns:
+            pd.DataFrame: DataFrame containing columns:
+                - StudentID
+                - FirstName
+                - LastName
+                - Email
+                - DateOfBirth
+                - AcademicYear
+                - ImageURL
+                - UniversityID
+                - SubjectsTaken
+        """
+        query = """
+        SELECT 
+            StudentID,
+            FirstName,
+            LastName,
+            Email,
+            DateOfBirth,
+            AcademicYear,
+            ImageURL,
+            UniversityID,
+            SubjectsTaken
+        FROM Students
+        """
+        with sqlite3.connect(self.db_path) as conn:
+            return pd.read_sql(query, conn)
 
     # REPORTS - 2
     def get_student_performance(self, student_id):
@@ -270,7 +362,7 @@ class DatabaseManager:
         WHERE g.StudentID = ?
         ORDER BY e.ExamDate
         '''
-        
+
         with sqlite3.connect(self.db_path) as conn:
             return pd.read_sql(performance_query, conn, params=(student_id,))
 
@@ -330,99 +422,6 @@ class DatabaseManager:
         GROUP BY s.SubjectName, s.Department
         ORDER BY AverageMarks DESC
         '''
-        
+
         with sqlite3.connect(self.db_path) as conn:
             return pd.read_sql(distribution_query, conn)
-    
-    def get_all_grades(self) -> pd.DataFrame:
-        """
-        Retrieve all grades data with associated exam, subject, and department information.
-        
-        Returns:
-            pd.DataFrame: DataFrame containing columns:
-                - StudentID
-                - SubjectName
-                - Department
-                - MarksObtained
-                - MaximumMarks
-                - ExamDate
-                - ExamName
-        """
-        query = """
-        SELECT 
-            g.StudentID,
-            s.SubjectName,
-            s.Department,
-            g.MarksObtained as StudentMarks,
-            e.MaximumMarks as MaxMarks,
-            e.ExamDate,
-            e.ExamName
-        FROM Grades g
-        JOIN Exams e ON g.ExamID = e.ExamID
-        JOIN Subjects s ON e.SubjectID = s.SubjectID
-        ORDER BY e.ExamDate ASC
-        """
-        
-        with sqlite3.connect(self.db_path) as conn:
-            return pd.read_sql(query, conn)
-
-    def get_all_students(self) -> pd.DataFrame:
-        """
-        Retrieve all student records with basic information.
-        
-        Returns:
-            pd.DataFrame: DataFrame containing columns:
-                - StudentID
-                - FirstName
-                - LastName
-                - Email
-                - DateOfBirth
-                - AcademicYear
-                - ImageURL
-                - UniversityID
-                - SubjectsTaken
-        """
-        query = """
-        SELECT 
-            StudentID,
-            FirstName,
-            LastName,
-            Email,
-            DateOfBirth,
-            AcademicYear,
-            ImageURL,
-            UniversityID,
-            SubjectsTaken
-        FROM Students
-        """
-        with sqlite3.connect(self.db_path) as conn:
-            return pd.read_sql(query, conn)
-
-    def get_university_details(self) -> pd.Series:
-        """
-        Retrieve university details for report branding.
-        
-        Returns:
-            pd.Series: Series containing:
-                - UniversityID
-                - UniversityName
-                - LogoURL
-                - Address
-                - ContactDetails
-        """
-        query = """
-        SELECT 
-            UniversityID,
-            UniversityName,
-            LogoURL,
-            Address,
-            ContactDetails
-        FROM Universities
-        LIMIT 1
-        """
-        
-        with sqlite3.connect(self.db_path) as conn:
-            result = pd.read_sql(query, conn)
-            return result.iloc[0] if not result.empty else pd.Series()
-    
-    
