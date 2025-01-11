@@ -334,3 +334,95 @@ class DatabaseManager:
         with sqlite3.connect(self.db_path) as conn:
             return pd.read_sql(distribution_query, conn)
     
+    def get_all_grades(self) -> pd.DataFrame:
+        """
+        Retrieve all grades data with associated exam, subject, and department information.
+        
+        Returns:
+            pd.DataFrame: DataFrame containing columns:
+                - StudentID
+                - SubjectName
+                - Department
+                - MarksObtained
+                - MaximumMarks
+                - ExamDate
+                - ExamName
+        """
+        query = """
+        SELECT 
+            g.StudentID,
+            s.SubjectName,
+            s.Department,
+            g.MarksObtained as StudentMarks,
+            e.MaximumMarks as MaxMarks,
+            e.ExamDate,
+            e.ExamName
+        FROM Grades g
+        JOIN Exams e ON g.ExamID = e.ExamID
+        JOIN Subjects s ON e.SubjectID = s.SubjectID
+        ORDER BY e.ExamDate ASC
+        """
+        
+        with sqlite3.connect(self.db_path) as conn:
+            return pd.read_sql(query, conn)
+
+    def get_all_students(self) -> pd.DataFrame:
+        """
+        Retrieve all student records with basic information.
+        
+        Returns:
+            pd.DataFrame: DataFrame containing columns:
+                - StudentID
+                - FirstName
+                - LastName
+                - Email
+                - DateOfBirth
+                - AcademicYear
+                - ImageURL
+                - UniversityID
+                - SubjectsTaken
+        """
+        query = """
+        SELECT 
+            StudentID,
+            FirstName,
+            LastName,
+            Email,
+            DateOfBirth,
+            AcademicYear,
+            ImageURL,
+            UniversityID,
+            SubjectsTaken
+        FROM Students
+        """
+        with sqlite3.connect(self.db_path) as conn:
+            return pd.read_sql(query, conn)
+
+    def get_university_details(self) -> pd.Series:
+        """
+        Retrieve university details for report branding.
+        
+        Returns:
+            pd.Series: Series containing:
+                - UniversityID
+                - UniversityName
+                - LogoURL
+                - Address
+                - ContactDetails
+        """
+        query = """
+        SELECT 
+            UniversityID,
+            UniversityName,
+            LogoURL,
+            Address,
+            ContactDetails
+        FROM Universities
+        LIMIT 1
+        """
+        
+        with sqlite3.connect(self.db_path) as conn:
+            result = pd.read_sql(query, conn)
+            return result.iloc[0] if not result.empty else pd.Series()
+    
+    
