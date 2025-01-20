@@ -228,7 +228,7 @@
         .stat-box.orange { background-color: #ffe5d0; border-color: #ffcd9f; }
         
         .stat-value {
-            font-size: 24px;
+            font-size: 14px;
             font-weight: bold;
             margin: 10px 0;
             color: #333;
@@ -382,16 +382,14 @@
                     </td>
                     <td class="stats-cell">
                         <div class="stat-box purple">
-                            <div class="stat-label">Passing Rate</div>
-                            <div class="stat-value">{{
-                                statistics.passing_students }}</div>
+                            <div class="stat-label">Passing Students (at least 50)</div>
+                            <div class="stat-value">{{ statistics.passing_students[0]}} / {{ statistics.passing_students[1]}}%</div>
                         </div>
                     </td>
                     <td class="stats-cell">
                         <div class="stat-box orange">
-                            <div class="stat-label">Top Performers</div>
-                            <div class="stat-value">{{ statistics.top_performers
-                                }}</div>
+                            <div class="stat-label">Students Received Top Scores in All Exams (>=90)</div>
+                            <div class="stat-value">{{ statistics.top_performers[0]}} / {{ statistics.top_performers[1]}}% </div>
                         </div>
                     </td>
                 </tr>

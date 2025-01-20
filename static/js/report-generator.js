@@ -118,7 +118,7 @@ function fetchTableData(api_endpoint) {
                 </thead>
             `;
 
-            // Create table body with clickable IDs
+            // Create table body with clickable IDs and image handling
             table.innerHTML += `
                 <tbody class="bg-white divide-y divide-gray-200">
                     ${data.map((row, index) => `
@@ -136,9 +136,13 @@ function fetchTableData(api_endpoint) {
                                 } else if (key.includes('URL')) {
                                     return `
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            <img src="${value}" class="w-12 rounded-full" alt="avatar"/>
+                                            <img src="#" 
+                                                 data-image="${value}"
+                                                 class="w-12 h-12 rounded-full object-cover"
+                                                 alt="avatar"
+                                                 onerror="this.src='static/default_student.png'">
                                         </td>
-                                    `
+                                    `;
                                 }
                                 return `
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -152,12 +156,34 @@ function fetchTableData(api_endpoint) {
             `;
             
             tableContent.appendChild(table);
+
+            // Load images after table is created
+            loadImages();
         })
         .catch(error => {
             const tableContent = document.getElementById('tableContent');
             tableContent.innerHTML = '<div class="text-center text-red-500 py-4">Error fetching table data</div>';
             console.error('Error:', error);
         });
+}
+// Function to load images
+function loadImages() {
+    const images = document.querySelectorAll('img[data-image]');
+    
+    images.forEach(img => {
+        const imageName = img.dataset.image;
+        
+        // Fetch image from API
+        fetch(`/api/v1/image/${imageName}`)
+            .then(response => response.json())
+            .then(data => {
+                img.src = data.image;
+            })
+            .catch(error => {
+                console.error('Error loading image:', error);
+                img.src = 'static/default_student.png';
+            });
+    });
 }
 
 // Handle browser back/forward buttons

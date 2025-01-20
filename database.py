@@ -167,24 +167,14 @@ class DatabaseManager:
         """
         Retrieve the subjects for a given student ID.
 
-        Args:
-            student_id (int): The ID of the student whose subjects are to be retrieved.
-            
-        Returns:
-            pandas.Series: A Series containing the subjects for the specified student.
         """
-        subjects_per_student_sql = '''
-        WITH split_subjects AS (
-            SELECT CAST(TRIM(value) AS INTEGER) as subject_id
-            FROM 
-                Students,
-                json_each('["' || REPLACE(SubjectsTaken, ',', '","') || '"]')
-            WHERE StudentID = ?
-            )
-        SELECT *
-        FROM Subjects
-        WHERE SubjectID IN (SELECT subject_id FROM split_subjects);
-        '''
+        subjects_per_student_sql = """
+        SELECT s.StudentID, sub.SubjectName, sub.Department FROM Students s
+        JOIN Grades g ON s.StudentID = g.StudentID
+        JOIN Exams e ON e.ExamID = g.ExamID
+        JOIN Subjects sub ON sub.SubjectID = e.SubjectID
+        WHERE s.StudentID = ?
+        """
 
         with sqlite3.connect(self.db_path) as conn:
             return pd.read_sql(subjects_per_student_sql, conn, params=(student_id,))
@@ -312,19 +302,10 @@ class DatabaseManager:
                 - AcademicYear
                 - ImageURL
                 - UniversityID
-                - SubjectsTaken
         """
         query = """
         SELECT 
-            StudentID,
-            FirstName,
-            LastName,
-            Email,
-            DateOfBirth,
-            AcademicYear,
-            ImageURL,
-            UniversityID,
-            SubjectsTaken
+            *
         FROM Students
         """
         with sqlite3.connect(self.db_path) as conn:

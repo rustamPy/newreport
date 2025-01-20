@@ -3,12 +3,17 @@ from fastapi.responses import FileResponse, JSONResponse
 import os
 import shutil
 
+
 from utils import ID_TO_TABLE, TABLE_TO_ID
 
 import pandas as pd
-# Import your database and report generator
 from database import DatabaseManager
 from report_generator import ReportGenerator
+
+import base64
+import os
+from PIL import Image
+from io import BytesIO
 
 # Initialize database and report generator
 db_manager = DatabaseManager()
@@ -59,7 +64,6 @@ async def get_table_data(table_name: str, limit = Query(100), id: int = Query(No
         raise HTTPException(status_code=500, detail=str(e))
 
 
-
 @router_v1.get("/reports/student-profile/{student_id}")
 async def generate_student_profile_report(student_id: int):
     """Generate comprehensive student profile report"""
@@ -74,8 +78,36 @@ async def generate_academic_performance_report():
     """Generate comprehensive academic performance distribution report"""
     try:
         pdf_path = report_generator.generate_academic_performance_report()
-        print(pdf_path)
         return FileResponse(pdf_path, media_type='application/pdf', filename='academic_performance_report.pdf')
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+
+@router_v1.get("/image/{image_name}")
+async def get_image(image_name: str):
+    try:
+        image_path = os.path.join("static", "imgs", "students", image_name)
+
+        if not os.path.exists(image_path):
+            raise HTTPException(status_code=404, detail="Image not found")
+
+        # Open and convert image to base64
+        with Image.open(image_path) as img:
+            # Resize if needed
+            img.thumbnail((300, 300))
+
+            # Convert to RGB if necessary
+            if img.mode in ("RGBA", "LA"):
+                background = Image.new("RGB", img.size, (255, 255, 255))
+                background.paste(img, mask=img.split()[-1])
+                img = background
+
+            # Save to bytes
+            buffer = BytesIO()
+            img.save(buffer, format="JPEG", quality=85)
+            image_base64 = base64.b64encode(buffer.getvalue()).decode("utf-8")
+
+        return {"image": f"data:image/jpeg;base64,{image_base64}"}
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

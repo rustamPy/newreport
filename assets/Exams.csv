@@ -1,23 +1,23 @@
-ExamID,SubjectID,ExamName,ExamDate,MaximumMarks,SubjectName,Department
-18292,1,Final Microeconomics,2024-02-01,100,Microeconomics,Economics
-18345,4,Final Fluid Dynamics,2024-02-02,100,Fluid Dynamics,Engineering
-18456,8,Final Thermodynamics,2024-02-03,100,Thermodynamics,Engineering
-18678,2,Final Genetics,2024-02-05,100,Genetics,Biology
-18789,3,Final Algebra,2024-02-06,100,Algebra,Mathematics
-18901,6,Final Inorganic Chemistry,2024-02-08,100,Inorganic Chemistry,Chemistry
-20001,12,Final Organic Chemistry,2024-02-11,100,Organic Chemistry,Chemistry
-20002,13,Final Data Structures,2024-02-12,100,Data Structures,Computer Science
-20003,14,Final Astrophysics,2024-02-13,100,Astrophysics,Physics
-20004,18,Final Macroeconomics,2024-02-14,100,Macroeconomics,Economics
-20005,20,Final Machine Learning,2024-02-15,100,Machine Learning,Computer Science
-20006,22,Final Ecology,2024-02-16,100,Ecology,Biology
-20007,25,Final Linear Algebra,2024-02-17,100,Linear Algebra,Mathematics
-20008,33,Final Quantum Mechanics,2024-02-18,100,Quantum Mechanics,Physics
-20009,56,Final World History,2024-02-19,100,World History,History
-20010,78,Final Medieval History,2024-02-20,100,Medieval History,History
-20011,79,Final Software Engineering,2024-02-21,100,Software Engineering,Computer Science
-20012,80,Final Network Security,2024-02-22,100,Network Security,Computer Science
-20013,81,Final Database Systems,2024-02-23,100,Database Systems,Computer Science
-20014,82,Final Artificial Intelligence,2024-02-24,100,Artificial Intelligence,Computer Science
-20015,83,Final Cloud Computing,2024-02-25,100,Cloud Computing,Computer Science
-20016,84,Final Web Development,2024-02-26,100,Web Development,Computer Science
+ExamID,SubjectID,ExamName,ExamDate,MaximumMarks
+18292,1,Final Microeconomics,2024-02-01,100
+18345,4,Final Fluid Dynamics,2024-02-02,100
+18456,8,Final Thermodynamics,2024-02-03,100
+18678,2,Final Genetics,2024-02-05,100
+18789,3,Final Algebra,2024-02-06,100
+18901,6,Final Inorganic Chemistry,2024-02-08,100
+20001,12,Final Organic Chemistry,2024-02-11,100
+20002,13,Final Data Structures,2024-02-12,100
+20003,14,Final Astrophysics,2024-02-13,100
+20004,18,Final Macroeconomics,2024-02-14,100
+20005,20,Final Machine Learning,2024-02-15,100
+20006,22,Final Ecology,2024-02-16,100
+20007,25,Final Linear Algebra,2024-02-17,100
+20008,33,Final Quantum Mechanics,2024-02-18,100
+20009,56,Final World History,2024-02-19,100
+20010,78,Final Medieval History,2024-02-20,100
+20011,79,Final Software Engineering,2024-02-21,100
+20012,80,Final Network Security,2024-02-22,100
+20013,81,Final Database Systems,2024-02-23,100
+20014,82,Final Artificial Intelligence,2024-02-24,100
+20015,83,Final Cloud Computing,2024-02-25,100
+20016,84,Final Web Development,2024-02-26,100
