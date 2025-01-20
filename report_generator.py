@@ -39,8 +39,8 @@ class ReportGenerator:
         buffer = io.BytesIO()
         plt.savefig(buffer, format='png')
         buffer.seek(0)
-        plt.close()
         encoded = base64.b64encode(buffer.getvalue()).decode("utf-8")
+        return encoded
 
     def _get_image_as_base64(
         self, image_path, default_image_path="static/default_student.png"
