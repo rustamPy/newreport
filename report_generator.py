@@ -39,9 +39,8 @@ class ReportGenerator:
         buffer = io.BytesIO()
         plt.savefig(buffer, format='png')
         buffer.seek(0)
-        encoded = base64.b64encode(buffer.getvalue()).decode("utf-8")
         plt.close()
-        return encoded
+        encoded = base64.b64encode(buffer.getvalue()).decode("utf-8")
 
     def _get_image_as_base64(
         self, image_path, default_image_path="static/default_student.png"
@@ -354,6 +353,7 @@ class ReportGenerator:
 
         plt.tight_layout()
         performance_plots_base64 = self._save_plot_to_base64(plt)
+        plt.close()
 
         # Calculate summary statistics
         total_students = len(all_students_df)
