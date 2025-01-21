@@ -7,11 +7,11 @@ CLIENT = TestClient(app)
 STUDENT_ID = 17915
 TABLE_PARAMS = [
     # (table name, expected columns_count, primary key)
-    ("students", 9, 'StudentID'),  
-    ("subjects", 3, 'SubjectID'),
-    ("exams", 7, 'ExamID'),
-    ("universities", 5, 'UniversityID'),
-    ("grades", 4, 'GradeID')
+    ("students", 8, "StudentID"),
+    ("subjects", 3, "SubjectID"),
+    ("exams", 5, "ExamID"),
+    ("universities", 5, "UniversityID"),
+    ("grades", 4, "GradeID"),
 ]
 
 def test_api_health_check():

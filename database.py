@@ -303,10 +303,7 @@ class DatabaseManager:
                 - ImageURL
                 - UniversityID
         """
-        query = """
-        SELECT 
-            *
-        FROM Students
-        """
+        query = "SELECT * FROM Students"
+
         with sqlite3.connect(self.db_path) as conn:
             return pd.read_sql(query, conn)
