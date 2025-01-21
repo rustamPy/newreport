@@ -27,46 +27,34 @@ The project will include a user-friendly UI that allows users to:
 - Retrieve and download reports from the integrated SQLite database.
 - Upload custom CSV datasets to generate reports based on user-provided data.
 
-## Development Plan
+## Getting Started
 
-The following steps outline the systematic development of the ARS:
+### Prerequisites
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/rustamPy/newreport.git
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd <project-directory>
+   ```
+3. Install dependencies with:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-### 1. Define Scope and Objectives (4.1)
-- Identify report types to generate (e.g., Student Progress Reports with graphs, academic performance summaries, risky performance detection).
-- Document requirements and use cases for clarity and focus, with GitHub links to the documentation.
+### Running the Service
+1. Run the main script:
+   ```bash
+   python main.py
+   ```
+2. Open your web browser and navigate to:
+   ```
+   http://localhost:8000
+   ```
 
-### 2. Design and Set Up the Database (4.2)
-- Create a database schema with well-defined tables, relationships, and constraints.
-- Populate the database with synthetic datasets.
-- Ensure alignment between the database structure and reporting requirements.
-
-### 3. Implement the Database Interaction Layer (4.3)
-- Use Python's `sqlite3` library for database connections and operations.
-- Implement and test functions for inserting, updating, and retrieving data.
-- Ensure the interaction layer operates efficiently and handles data accurately.
-
-### 4. Develop the Report Generation Process and API (4.4)
-- Write Python scripts to compute metrics like averages, success rates, and other insights.
-- Develop algorithms for detailed reports, including individual student profiles.
-- Integrate APIs for both internal and external use.
-- Validate computations for correctness and reliability.
-
-### 5. Design the User Interface (4.5)
-- Create an intuitive interface for report selection and generation.
-- Include functionality to review tables on the homepage.
-- Design the interface to function locally (e.g., `localhost:8000`).
-
-### 6. Test and Validate the System (4.6)
-- Conduct extensive testing to identify bugs, optimize performance, and validate report outputs.
-- Perform user acceptance testing to gather feedback and refine the tool.
-- Ensure the ARS meets its objectives and functions seamlessly.
-
-## Project Objectives
-
-By following this structured approach, the ARS will demonstrate:
-- The potential of **SQLite**, **Python**, and **CSV** for efficient data analysis and reporting.
-- A scalable, ethical, and cost-effective method for building versatile reporting tools.
-
-## Let's Get Started
-
-With the above roadmap, this project aims to deliver a fully functional and user-friendly ARS system that meets the specified objectives and highlights the power of lightweight database solutions.
+### Running Tests
+1. To run the test suite, simply execute:
+   ```bash
+   pytest
+   ```
