@@ -1,3 +1,5 @@
+![Logo](static/imgs/dfavicon.svg "Logo")
+
 # Automated Reporting System (ARS)
 
 ## Project Overview
