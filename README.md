@@ -1,4 +1,5 @@
-![Logo](static/imgs/favicon.svg "Logo")  
+![Logo](static/imgs/favicon.svg "Logo")    
+![Logo](static/imgs/dfavicon.svg "Logo") 
 
 <img width="800" alt="image" src="https://github.com/user-attachments/assets/c952cbdf-0dd9-4ae4-b995-d74fc3265d5a" />
 
