@@ -12,7 +12,6 @@ function uploadCSV() {
     })
         .then(response => {
             if (!response.ok) {
-                console.log(response);
                 return response.text().then(text => {
                     throw new Error(`HTTP ${response.status}: ${text || response.statusText}`);
                 });
@@ -58,7 +57,6 @@ function generateReport(reportType, id=0) {
     .then(response => response.blob())
     .then(blob => {
         const url = window.URL.createObjectURL(blob);
-        console.log('URL:', url);
         downloadReport(url);
     })
         .catch(error => {
@@ -136,11 +134,10 @@ function fetchTableData(api_endpoint) {
                                 } else if (key.includes('URL')) {
                                     return `
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            <img src="#" 
-                                                 data-image="${value}"
+                                            <img src="/" 
                                                  class="w-12 h-12 rounded-full object-cover"
                                                  alt="avatar"
-                                                 onerror="this.src='static/default_student.png'">
+                                                 onerror="this.src='${value}'">
                                         </td>
                                     `;
                                 }
@@ -199,7 +196,7 @@ window.addEventListener('popstate', (event) => {
 
 // Handle initial page load with hash
 window.addEventListener('load', () => {
-    console.log(window.location)
+    (window.location)
     const hash = window.location.hash.slice(1);
     if (hash) {
         const params = new URLSearchParams(hash);

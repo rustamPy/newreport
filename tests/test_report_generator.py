@@ -11,14 +11,16 @@ def mock_db_manager():
     mock_db = Mock()
 
     # Mock student data
-    mock_db.get_student_data_by_id.return_value = pd.Series({
-        'FirstName': 'John',
-        'LastName': 'Doe',
-        'DateOfBirth': '2000-01-01',
-        'Email': 'john.doe@example.com',
-        'ImageURL': 'http://example.com/photo.jpg',
-        'AcademicYear': '2024'
-    })
+    mock_db.get_student_data_by_id.return_value = pd.Series(
+        {
+            "FirstName": "John",
+            "LastName": "Doe",
+            "DateOfBirth": "2000-01-01",
+            "Email": "john.doe@example.com",
+            "ImageURL": "http://example.com/photo.jpg",
+            "AcademicYear": "2025",
+        }
+    )
 
     # Mock subjects data
     mock_db.get_subjects_per_student.return_value = pd.DataFrame([
@@ -27,12 +29,14 @@ def mock_db_manager():
     ])
 
     # Mock grades data
-    mock_db.get_grades_per_student.return_value = pd.DataFrame({
-        'SubjectName': ['Math', 'Physics'] * 2,
-        'StudentMarks': [85, 90, 88, 92],
-        'MaxMarks': [100, 100, 100, 100],
-        'ExamDate': ['2024-01-01', '2024-01-02', '2024-02-01', '2024-02-02']
-    })
+    mock_db.get_grades_per_student.return_value = pd.DataFrame(
+        {
+            "SubjectName": ["Math", "Physics"] * 2,
+            "StudentMarks": [85, 90, 88, 92],
+            "MaxMarks": [100, 100, 100, 100],
+            "ExamDate": ["2025-01-01", "2025-01-02", "2025-02-01", "2025-02-02"],
+        }
+    )
 
     # Mock university data
     mock_db.get_university_per_student.return_value = pd.Series({
@@ -55,12 +59,12 @@ def mock_db_manager():
             "StudentMarks": [85, 90, 88, 75, 80, 78],
             "MaxMarks": [100, 100, 100, 100, 100, 100],
             "ExamDate": [
-                "2024-01-01",
-                "2024-01-02",
-                "2024-01-03",
-                "2024-02-01",
-                "2024-02-02",
-                "2024-02-03",
+                "2025-01-01",
+                "2025-01-02",
+                "2025-01-03",
+                "2025-02-01",
+                "2025-02-02",
+                "2025-02-03",
             ],
             "Department": [
                 "Science",
@@ -146,17 +150,19 @@ def test_html_to_pdf():
 def test_create_student_achievements_plots():
     """Test _create_student_achievements_plots method"""
     generator = ReportGenerator(Mock())
-    
+
     # Create test data
-    grades_df = pd.DataFrame({
-        'SubjectName': ['Math', 'Physics'] * 2,
-        'StudentMarks': [85, 90, 88, 92],
-        'MaxMarks': [100, 100, 100, 100],
-        'ExamDate': ['2024-01-01', '2024-01-02', '2024-02-01', '2024-02-02']
-    })
-    
+    grades_df = pd.DataFrame(
+        {
+            "SubjectName": ["Math", "Physics"] * 2,
+            "StudentMarks": [85, 90, 88, 92],
+            "MaxMarks": [100, 100, 100, 100],
+            "ExamDate": ["2025-01-01", "2025-01-02", "2025-02-01", "2025-02-02"],
+        }
+    )
+
     fig = generator._create_student_achievements_plots(grades_df)
-    
+
     assert isinstance(fig, plt.Figure)
     assert len(fig.axes) == 4  # Should have 4 subplots
 
@@ -191,7 +197,7 @@ def test_create_student_achievements_plots():
             "SubjectName": ["Math", "Physics"] * 2,
             "StudentMarks": [85, 90, 88, 92],
             "MaxMarks": [100, 100, 100, 100],
-            "ExamDate": ["2024-01-01", "2024-01-02", "2024-02-01", "2024-02-02"],
+            "ExamDate": ["2025-01-01", "2025-01-02", "2025-02-01", "2025-02-02"],
         }
     )
 

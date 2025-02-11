@@ -407,7 +407,7 @@ class ReportGenerator:
         # Prepare template data
         template_data = {
             "report_date": datetime.now().strftime("%Y-%m-%d"),
-            "academic_year": "2024",
+            "academic_year": "2025",
             "performance_data": f"data:image/png;base64,{performance_plots_base64}",
             "university": {
                 "logo_url": university_details.LogoURL,
